@@ -5,11 +5,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerInputController : MonoBehaviour, IControllable<InputAction.CallbackContext>
 {
-    public event Action<Vector2> MovementInput;
-    public event Action OnJumpPressed;
-    public event Action OnJumpReleased;
-    public event Action OnAttackPressed;
-    public event Action OnAttackReleased;
+    public event Action<ActionDataBase> OnActionTriggered;
 
     private PlayerInput _playerInput;
 
@@ -38,26 +34,18 @@ public class PlayerInputController : MonoBehaviour, IControllable<InputAction.Ca
         switch (context.action.name)
         {
             case "Move":
-                MovementInput?.Invoke(context.ReadValue<Vector2>());
+                OnActionTriggered.Invoke(new ActionData<float>(ActionType.Move, context.ReadValue<Vector2>().x));
                 break;
             case "Jump":
                 if (context.started)
                 {
-                    OnJumpPressed?.Invoke();
-                }
-                else if (context.canceled)
-                {
-                    OnJumpReleased?.Invoke();
+                    OnActionTriggered.Invoke(new ActionDataBase(ActionType.Jump));
                 }
                 break;
             case "Attack":
                 if (context.started)
                 {
-                    OnAttackPressed?.Invoke();
-                }
-                else if (context.canceled)
-                {
-                    OnAttackReleased?.Invoke();
+                    OnActionTriggered.Invoke(new ActionDataBase(ActionType.Attack));
                 }
                 break;
         }

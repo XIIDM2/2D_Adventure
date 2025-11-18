@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class ChangeObjectDirection : MonoBehaviour
+public class ObjectDirection
 {
     private const float _thresHold = 0.001f;
     
-    public void FaceDirection(float value)
+    public void FaceDirection(Transform transform, float value)
     {
         Vector3 transformScale = transform.localScale;
 

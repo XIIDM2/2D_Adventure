@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class UnitAnimation : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Animator _animator;
+
+    public void SetFloat(string name, float value)
     {
-        
+        _animator.SetFloat(name, value);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetBool(string name, bool value)
     {
-        
+        _animator.SetBool(name, value);
+    }
+
+    public void SetTrigger(string name)
+    {
+        _animator.SetTrigger(name);
     }
 }
