@@ -4,6 +4,11 @@ public class UnitAnimation : MonoBehaviour
 {
     private Animator _animator;
 
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+    }
+
     public void SetFloat(string name, float value)
     {
         _animator.SetFloat(name, value);

@@ -9,6 +9,8 @@ public class PlayerInputController : MonoBehaviour, IControllable<InputAction.Ca
 
     private PlayerInput _playerInput;
 
+    private Key _lastPressed;
+
     private void Awake()
     {
         _playerInput = GetComponent<PlayerInput>();
@@ -34,7 +36,22 @@ public class PlayerInputController : MonoBehaviour, IControllable<InputAction.Ca
         switch (context.action.name)
         {
             case "Move":
-                OnActionTriggered.Invoke(new ActionData<float>(ActionType.Move, context.ReadValue<Vector2>().x));
+
+                bool aKeyPressed = Keyboard.current.aKey.isPressed;
+                bool dKeyPressed = Keyboard.current.dKey.isPressed;
+
+                if (Keyboard.current.aKey.wasPressedThisFrame) _lastPressed = Key.A;
+                if (Keyboard.current.dKey.wasPressedThisFrame) _lastPressed = Key.D;
+
+                Vector2 inputValue = context.ReadValue<Vector2>();
+
+                if (aKeyPressed && dKeyPressed)
+                {
+                    inputValue.x = _lastPressed == Key.A ? -1 : 1;
+                }
+
+                OnActionTriggered.Invoke(new ActionData<Vector2>(ActionType.Move, inputValue));
+
                 break;
             case "Jump":
                 if (context.started)

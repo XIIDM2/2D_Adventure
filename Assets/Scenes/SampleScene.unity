@@ -284,10 +284,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.054629628
-    width: 0.33333334
-    height: 0.33580247
+    x: 0.0036458336
+    y: 0
+    width: 0.9926471
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -378,6 +378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitGroundMovement
   _movementSpeed: 5
   _jumpForce: 5
+  _groundCheckOffset: 0.05
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -3815,9 +3816,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 743678069994938845, guid: 5194a4d6ab829594186bcd74826052fd, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 96df74a588314174bab150abc074bfe9, type: 2}
     - target: {fileID: 1077350150582585598, guid: 5194a4d6ab829594186bcd74826052fd, type: 3}
       propertyPath: m_Size.y
       value: 3.0790079
+      objectReference: {fileID: 0}
+    - target: {fileID: 1077350150582585598, guid: 5194a4d6ab829594186bcd74826052fd, type: 3}
+      propertyPath: m_Material
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1077350150582585598, guid: 5194a4d6ab829594186bcd74826052fd, type: 3}
       propertyPath: m_Offset.y

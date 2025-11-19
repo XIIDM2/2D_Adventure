@@ -5,6 +5,9 @@ public class UnitGroundMovement : MonoBehaviour, IMovable
     [Header("Movement")]
     [SerializeField] private float _movementSpeed = 5.0f;
 
+    public Vector2 LastDirection {  get; private set; }
+    public Vector2 Velocity => _rb.linearVelocity;
+
     [Header("Jump")]
     [SerializeField] private float _jumpForce = 5.0f;
 
@@ -51,6 +54,11 @@ public class UnitGroundMovement : MonoBehaviour, IMovable
     public void Jump()
     {
        if (IsGrounded) _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+    }
+
+    public void SetLastDirection(Vector2 vector)
+    {
+        LastDirection = vector;
     }
 
     private void OnDrawGizmosSelected()

@@ -2,57 +2,57 @@ using UnityEngine;
 
 public class UnitController : MonoBehaviour
 {
-    public IControllableBase _controller { get; private set; }
-    public IMovable _movement {  get; private set; }
-    public IAttackable _attack { get; private set; }
+    public IControllableBase Controller { get; private set; }
+    public IMovable Movement {  get; private set; }
+    public IAttackable Attack { get; private set; }
 
-    private UnitAnimation unitAnimation;
+    public UnitAnimation Animation { get; private set; }
 
-    private FiniteStateMachine _movementFSM;
+    public FiniteStateMachine MovementFSM { get; private set; }
 
     private void Awake()
     {
-        _controller = GetComponent<IControllableBase>();
+        Controller = GetComponent<IControllableBase>();
 
-        _movement = GetComponent<IMovable>();
-        _attack = GetComponent<IAttackable>();
+        Movement = GetComponent<IMovable>();
+        Attack = GetComponent<IAttackable>();
 
-        unitAnimation = GetComponentInChildren<UnitAnimation>();
+        Animation = GetComponentInChildren<UnitAnimation>();
     }
 
     private void OnEnable()
     {
-        _controller.OnActionTriggered += HandleAction;
+        Controller.OnActionTriggered += HandleAction;
     }
 
     private void OnDisable()
     {
-        _controller.OnActionTriggered -= HandleAction;
+        Controller.OnActionTriggered -= HandleAction;
     }
 
     private void Start()
     {
-        _movementFSM = new FiniteStateMachine();
-        _movementFSM.StateInit(new WarriorIdleState(), this);
+        MovementFSM = new FiniteStateMachine();
+        MovementFSM.StateInit(new GroundIdleState(), this);
     }
 
     private void Update()
     {
-        _movementFSM.UpdateState(this);
+        MovementFSM.UpdateState(this);
     }
 
     private void LateUpdate()
     {
-        _movementFSM.LateUpdateState(this);
+        MovementFSM.LateUpdateState(this);
     }
 
     private void FixedUpdate()
     {
-        _movementFSM.FixedUpdateState(this);
+        MovementFSM.FixedUpdateState(this);
     }
 
     public void HandleAction(ActionDataBase actionDataBase)
     {
-        _movementFSM.HandleAction(this, actionDataBase);
+        MovementFSM.HandleAction(this, actionDataBase);
     }
 }
