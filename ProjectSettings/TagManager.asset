@@ -36,7 +36,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Damagable
   m_SortingLayers:
   - name: Envieroment
     uniqueID: 2928455555

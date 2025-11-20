@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class UnitAnimation : MonoBehaviour
 {
+    public event UnityAction AttackHit;
     private Animator _animator;
 
     private void Awake()
@@ -22,5 +24,17 @@ public class UnitAnimation : MonoBehaviour
     public void SetTrigger(string name)
     {
         _animator.SetTrigger(name);
+    }
+
+    public bool IsStatePlayingByTag(string name)
+    {
+        AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
+
+        return info.IsTag(name) && info.normalizedTime < 1.0f;
+    }
+
+    public void OnAttackHit()
+    {
+        AttackHit?.Invoke();
     }
 }

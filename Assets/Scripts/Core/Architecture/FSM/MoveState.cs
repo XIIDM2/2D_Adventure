@@ -6,7 +6,7 @@ public class MoveState : State
     private float _idleTransitionTime = 0.01f;
     public override State HandleTransition(UnitController controller)
     {
-        if (Mathf.Approximately(_direction.x, 0.0f) && Mathf.Approximately(controller.Movement.Velocity.x, 0.0f))
+        if (Mathf.Approximately(controller.Movement.Velocity.x, 0.0f))
         {
             _idleTransitionTimer += Time.deltaTime;
 

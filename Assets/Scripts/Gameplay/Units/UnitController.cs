@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitController : MonoBehaviour
@@ -9,6 +10,9 @@ public class UnitController : MonoBehaviour
     public UnitAnimation Animation { get; private set; }
 
     public FiniteStateMachine MovementFSM { get; private set; }
+    public FiniteStateMachine AttackFSM { get; private set; }
+
+    private List<FiniteStateMachine> _finiteStateMachines = new List<FiniteStateMachine>();
 
     private void Awake()
     {
@@ -23,36 +27,57 @@ public class UnitController : MonoBehaviour
     private void OnEnable()
     {
         Controller.OnActionTriggered += HandleAction;
+        Animation.AttackHit += Attack.Attack;
     }
 
     private void OnDisable()
     {
         Controller.OnActionTriggered -= HandleAction;
+        Animation.AttackHit -= Attack.Attack;
     }
 
     private void Start()
     {
         MovementFSM = new FiniteStateMachine();
         MovementFSM.StateInit(new GroundIdleState(), this);
+
+        AttackFSM = new FiniteStateMachine();
+        AttackFSM.StateInit(new NonAttackState(), this);
+
+        _finiteStateMachines.Add(MovementFSM);
+        _finiteStateMachines.Add(AttackFSM);
+
     }
 
     private void Update()
     {
-        MovementFSM.UpdateState(this);
+        foreach (FiniteStateMachine fsm in _finiteStateMachines)
+        {
+            fsm.UpdateState(this);
+        }
     }
 
     private void LateUpdate()
     {
-        MovementFSM.LateUpdateState(this);
+        foreach (FiniteStateMachine fsm in _finiteStateMachines)
+        {
+            fsm.LateUpdateState(this);
+        }
     }
 
     private void FixedUpdate()
     {
-        MovementFSM.FixedUpdateState(this);
+        foreach (FiniteStateMachine fsm in _finiteStateMachines)
+        {
+            fsm.FixedUpdateState(this);
+        }
     }
 
-    public void HandleAction(ActionDataBase actionDataBase)
+    public void HandleAction(ActionDataBase action)
     {
-        MovementFSM.HandleAction(this, actionDataBase);
+        foreach (FiniteStateMachine fsm in _finiteStateMachines)
+        {
+            fsm.HandleAction(this, action);
+        }
     }
 }
