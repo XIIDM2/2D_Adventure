@@ -50,7 +50,7 @@ public class PlayerInputController : MonoBehaviour, IControllable<InputAction.Ca
                     inputValue.x = _lastPressed == Key.A ? -1 : 1;
                 }
 
-                OnActionTriggered.Invoke(new ActionData<Vector2>(ActionType.Move, inputValue));
+                OnActionTriggered.Invoke(new ActionData<Vector2>(ActionType.Walk, inputValue));
 
                 break;
             case "Jump":

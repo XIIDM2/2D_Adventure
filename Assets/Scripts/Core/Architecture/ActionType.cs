@@ -1,8 +1,8 @@
 public enum ActionType
 {
-    Move,
+    Walk,
+    Fly,
     Attack,
-    StopAttack,
     Jump,
     Die,
     Charge,
