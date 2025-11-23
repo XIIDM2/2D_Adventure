@@ -2,136 +2,35 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerInput))]
-public class PlayerInputController : MonoBehaviour, IControllable<InputAction.CallbackContext>
+public class PlayerInputController : MonoBehaviour, IActionInvoker
 {
-    public event Action<ActionDataBase> OnActionTriggered;
+    private InputSystem_Actions inputActions;
 
-    private PlayerInput _playerInput;
-
-    private Key _lastPressed;
+    private Actions _actions;
 
     private void Awake()
     {
-        _playerInput = GetComponent<PlayerInput>();
+        inputActions = new InputSystem_Actions();
 
-        if (_playerInput.notificationBehavior != PlayerNotifications.InvokeCSharpEvents)
-        {
-            Debug.LogError("Wrong Player Input Behavior for onActionTriggerEvents, please switch to 'Invoke C# Events' ");
-        }
+        _actions = new Actions();
     }
 
     private void OnEnable()
     {
-        _playerInput.onActionTriggered += HandleAction;
+        inputActions.Enable();
     }
 
     private void OnDisable()
     {
-        _playerInput.onActionTriggered -= HandleAction;
+        inputActions.Disable();
     }
 
-    public void HandleAction(InputAction.CallbackContext context)
+    public Actions GetActions()
     {
-        switch (context.action.name)
-        {
-            case "Move":
+        _actions.MoveDirection = inputActions.Player.Move.ReadValue<Vector2>();
+        _actions.JumpRequested = inputActions.Player.Jump.WasPressedThisFrame();
+        _actions.AttackRequested = inputActions.Player.Attack.WasPressedThisFrame();
 
-                bool aKeyPressed = Keyboard.current.aKey.isPressed;
-                bool dKeyPressed = Keyboard.current.dKey.isPressed;
-
-                if (Keyboard.current.aKey.wasPressedThisFrame) _lastPressed = Key.A;
-                if (Keyboard.current.dKey.wasPressedThisFrame) _lastPressed = Key.D;
-
-                Vector2 inputValue = context.ReadValue<Vector2>();
-
-                if (aKeyPressed && dKeyPressed)
-                {
-                    inputValue.x = _lastPressed == Key.A ? -1 : 1;
-                }
-
-                OnActionTriggered.Invoke(new ActionData<Vector2>(ActionType.Walk, inputValue));
-
-                break;
-            case "Jump":
-                if (context.started)
-                {
-                    OnActionTriggered.Invoke(new ActionDataBase(ActionType.Jump));
-                }
-                break;
-            case "Attack":
-                if (context.started)
-                {
-                    OnActionTriggered.Invoke(new ActionDataBase(ActionType.Attack));
-                }
-                break;
-        }
+        return _actions;
     }
-
-    #region C# InputSystemActions Script
-    //private InputSystem_Actions inputActions;
-
-    //private void Awake()
-    //{
-    //    inputActions = new InputSystem_Actions();
-    //}
-
-    //private void OnEnable()
-    //{
-    //    inputActions.Player.Move.performed += OnMovePerformed;
-    //    inputActions.Player.Move.canceled += OnMoveCanceled;
-
-    //    inputActions.Player.Jump.performed += OnJumpPerformed;
-    //    inputActions.Player.Jump.canceled += OnJumpCanceled;
-
-    //    inputActions.Player.Attack.performed += OnAttackPerformed;
-    //    inputActions.Player.Attack.canceled += OnAttackCanceled;
-
-    //    inputActions.Enable();
-
-    //}
-
-    //private void OnDisable()
-    //{
-    //    inputActions.Player.Move.performed -= OnMovePerformed;
-    //    inputActions.Player.Move.canceled -= OnMoveCanceled;
-
-    //    inputActions.Player.Jump.performed -= OnJumpPerformed;
-    //    inputActions.Player.Jump.canceled -= OnJumpCanceled;
-
-    //    inputActions.Player.Attack.performed -= OnAttackPerformed;
-    //    inputActions.Player.Attack.canceled -= OnAttackCanceled;
-
-    //    inputActions.Disable();
-    //}
-    //private void OnMovePerformed(InputAction.CallbackContext context)
-    //{
-    //    horizontalMovement?.Invoke(context.ReadValue<Vector2>().x);
-    //}
-
-    //private void OnMoveCanceled(InputAction.CallbackContext context)
-    //{
-    //    horizontalMovement?.Invoke(context.ReadValue<Vector2>().x);
-    //}
-
-    //private void OnJumpPerformed(InputAction.CallbackContext context)
-    //{
-    //    OnJumpPressed?.Invoke();
-    //}
-
-    //private void OnJumpCanceled(InputAction.CallbackContext context)
-    //{
-    //    OnJumpReleased?.Invoke();
-    //}
-
-    //private void OnAttackPerformed(InputAction.CallbackContext context)
-    //{
-    //    OnAttackPressed?.Invoke();
-    //}
-
-    //private void OnAttackCanceled(InputAction.CallbackContext context)
-    //{
-    //    OnAttackReleased?.Invoke();
-    //}
-    #endregion
 }

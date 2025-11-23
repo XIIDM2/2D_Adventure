@@ -1,55 +1,58 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-
 public class Health : MonoBehaviour
 {
-    public event UnityAction OnHealthChanged;
+    public event UnityAction<int> OnHealthChanged;
     public event UnityAction OnDeath;
 
-    private int _maxHealth;
-    private int _currentHealth;
+    [Header("Parameters")]
+    [SerializeField] private int _maxHealth;
+    [SerializeField] private int _currentHealth;
 
+    public int MaxHealth => _maxHealth;
+
+    public int CurrentHealth
+    {
+        get 
+        { 
+            return _currentHealth; 
+        }
+        private set
+        {
+            _currentHealth = Math.Clamp(value, 0, _maxHealth);
+            OnHealthChanged?.Invoke(_currentHealth);
+        }
+    }
+ 
     private void Awake()
     {
-        _maxHealth = 10;
+        _maxHealth = 10; // change on data later
         _currentHealth = _maxHealth;
     }
 
-    public int GetCurrentHealth()
+    private void Start()
     {
-        return _currentHealth;
-    }
-
-    public int GetMaxHealth()
-    {
-        return _maxHealth;
+        OnHealthChanged?.Invoke(_currentHealth);
     }
 
     public void TakeDamage(int amount)
     {
-        if (_currentHealth <= 0) return;
+        if (CurrentHealth <= 0) return;
 
-        _currentHealth -= amount;
-        OnHealthChanged?.Invoke();
+        CurrentHealth -= amount;
 
-        if (_currentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
-            _currentHealth = 0;
             OnDeath?.Invoke();
         }
     }
 
     public void HealDamage(int amount)
     {
-        if (_currentHealth <= 0 || _currentHealth >= _maxHealth) return;
+        if (CurrentHealth <= 0 || CurrentHealth >= _maxHealth) return;
 
-        _currentHealth += amount;
-        if (_currentHealth >= _maxHealth)
-        {
-            _currentHealth = _maxHealth;
-        }
-        
-        OnHealthChanged?.Invoke();
+        CurrentHealth += amount;       
     }
 }

@@ -2,8 +2,7 @@ using UnityEngine;
 
 public abstract class State
 {
-    public virtual State HandleAction(UnitController controller, ActionDataBase action) { }
-    public virtual State HandleTransition(UnitController controller) => null;
+    public virtual State HandleTransitions(UnitController controller, Actions actions) => null;
     public virtual void Enter(UnitController controller) { }
     public virtual void Update(UnitController controller) { }
     public virtual void LateUpdate(UnitController controller) { }

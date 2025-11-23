@@ -10,9 +10,9 @@ public class FiniteStateMachine
         _currentState.Enter(controller);
     }
 
-    public void UpdateState(UnitController controller)
+    public void UpdateState(UnitController controller, Actions actions)
     {
-        State newState = _currentState.HandleTransition(controller);
+        State newState = _currentState.HandleTransitions(controller, actions);
 
         if (newState != null)
         {
@@ -34,13 +34,6 @@ public class FiniteStateMachine
     public void FixedUpdateState(UnitController controller)
     {
         _currentState.FixedUpdate(controller);
-    }
-
-    public void HandleAction(UnitController controller, ActionDataBase actionDataBase)
-    {
-        State newState = _currentState.HandleAction(controller, actionDataBase);
-
-        ChangeState(newState, controller);
     }
 
     private void ChangeState(State state, UnitController controller)
