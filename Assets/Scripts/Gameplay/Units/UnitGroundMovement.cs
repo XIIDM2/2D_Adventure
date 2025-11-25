@@ -14,17 +14,21 @@ public class UnitGroundMovement : MonoBehaviour, IMoveable
     private Rigidbody2D _rb;
 
     private IMovementContext _movementcontext;
+    private ObjectDirection _direction;
     
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _movementcontext = GetComponent<IMovementContext>();
+
+        _direction = new ObjectDirection();
     }
 
     private void Start()
     {
         _groundLayer = LayerMask.GetMask("Ground");
     }
+
 
     private void FixedUpdate()
     {
@@ -34,6 +38,8 @@ public class UnitGroundMovement : MonoBehaviour, IMoveable
     public void Move(Vector2 direction)
     {
         _rb.linearVelocityX = Mathf.Clamp(direction.x * _movementSpeed, -_movementSpeed, _movementSpeed);
+
+        _direction.FaceDirection(transform, _rb.linearVelocityX);
     }
 
     public void Jump()

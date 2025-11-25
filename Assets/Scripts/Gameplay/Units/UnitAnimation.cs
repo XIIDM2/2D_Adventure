@@ -3,12 +3,14 @@ using UnityEngine.Events;
 
 public enum UnitAnimationParameter
 {
-
+    IsMoving,
+    IsAttacking,
+    StopAttack,
 }
 
 public class UnitAnimation : MonoBehaviour
 {
-    public event UnityAction AttackHit;
+    public event UnityAction OnAttackHit;
 
     private Animator _animator;
 
@@ -32,8 +34,15 @@ public class UnitAnimation : MonoBehaviour
         _animator.SetTrigger(parameter.ToString());
     }
 
-    public void OnAttackHit()
+    public bool IsStatePlayingByTag(string name)
     {
-        AttackHit?.Invoke();
+        AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
+
+        return info.IsTag(name) && info.normalizedTime < 1.0f;
+    }
+
+    public void ACAttackHit()
+    {
+        OnAttackHit?.Invoke();
     }
 }

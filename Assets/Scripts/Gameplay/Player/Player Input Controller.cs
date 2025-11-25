@@ -29,7 +29,7 @@ public class PlayerInputController : MonoBehaviour, IActionInvoker
     {
         _actions.MoveDirection = inputActions.Player.Move.ReadValue<Vector2>();
         _actions.JumpRequested = inputActions.Player.Jump.WasPressedThisFrame();
-        _actions.AttackRequested = inputActions.Player.Attack.WasPressedThisFrame();
+        _actions.AttackRequested = inputActions.Player.Attack.IsPressed();
 
         return _actions;
     }
