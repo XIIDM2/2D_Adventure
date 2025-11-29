@@ -1,11 +1,15 @@
 using UnityEngine;
 
-public class MoveState : State
+public class JumpState : State
 {
+    private const float JUMP_THRESHOLD_TIME = 0.15f;
+    private float _lastTimeJumped;
     public override State HandleTransitions(UnitController controller, Actions actions)
     {
-        if (actions.MoveDirection == Vector2.zero) return controller.IdleState;
-        else if (controller.IsGrounded && actions.JumpRequested) return controller.JumpState;
+        if (Time.time > _lastTimeJumped + JUMP_THRESHOLD_TIME && controller.IsGrounded)
+        {
+            return actions.MoveDirection == Vector2.zero ? controller.IdleState : controller.MoveState;
+        }
 
         return base.HandleTransitions(controller, actions);
     }
@@ -14,7 +18,12 @@ public class MoveState : State
     {
         base.Enter(controller);
 
-        controller.Animation.SetBool(UnitAnimationParameter.IsMoving, true);
+        _lastTimeJumped = Time.time;
+
+        controller.Animation.SetTrigger(UnitAnimationParameter.Jump);
+
+        controller.JumpAbility.Jump();
+
     }
 
     public override void FixedUpdate(UnitController controller)
@@ -30,12 +39,5 @@ public class MoveState : State
         {
             controller.Movement.Move(Vector2.zero);
         }
-    }
-
-    public override void Exit(UnitController controller)
-    {
-        base.Exit(controller);
-
-        controller.Animation.SetBool(UnitAnimationParameter.IsMoving, false);
     }
 }

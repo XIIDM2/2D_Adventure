@@ -4,8 +4,10 @@ using UnityEngine.Events;
 public enum UnitAnimationParameter
 {
     IsMoving,
+    IsGrounded,
     IsAttacking,
     StopAttack,
+    Jump,
 }
 
 public class UnitAnimation : MonoBehaviour
@@ -39,6 +41,11 @@ public class UnitAnimation : MonoBehaviour
         AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
 
         return info.IsTag(name) && info.normalizedTime < 1.0f;
+    }
+    public void ChangeGroundState(bool value)
+    {
+        SetBool(UnitAnimationParameter.IsGrounded, value);
+
     }
 
     public void ACAttackHit()

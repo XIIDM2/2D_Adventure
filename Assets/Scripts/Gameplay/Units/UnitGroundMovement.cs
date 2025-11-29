@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UnitGroundMovement : MonoBehaviour, IMoveable
+public class UnitGroundMovement : MonoBehaviour, IMoveable, IJumpable
 {
     [Header("Parameters")]
     [SerializeField] private float _movementSpeed = 5.0f;

@@ -1,10 +1,17 @@
 using UnityEngine;
 
-public struct Actions
+public readonly struct Actions
 {
-    public Vector2 MoveDirection;
+    public readonly Vector2 MoveDirection;
 
-    public bool JumpRequested;
+    public readonly bool JumpRequested;
 
-    public bool AttackRequested;
+    public readonly bool AttackRequested;
+
+    public Actions(Vector2 MoveDirection, bool JumpRequested, bool AttackRequested)
+    {
+        this.MoveDirection = MoveDirection;
+        this.JumpRequested = JumpRequested;
+        this.AttackRequested = AttackRequested;
+    }
 }

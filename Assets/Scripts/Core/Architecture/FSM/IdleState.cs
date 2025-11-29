@@ -5,6 +5,7 @@ public class IdleState : State
     public override State HandleTransitions(UnitController controller, Actions actions)
     {
         if (actions.MoveDirection != Vector2.zero) return controller.MoveState;
+        else if (controller.IsGrounded && actions.JumpRequested) return controller.JumpState;
 
         return base.HandleTransitions(controller, actions);
     }
