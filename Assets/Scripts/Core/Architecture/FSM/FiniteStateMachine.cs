@@ -1,18 +1,18 @@
 using UnityEngine;
 
-public class FiniteStateMachine
+public class FiniteStateMachine<T> where T : IControllable
 {
-    private State _currentState;
+    private State<T> _currentState;
 
-    public void StateInit(State state, UnitController controller)
+    public void StateInit(State<T> state, T controller)
     {
         _currentState = state;
         _currentState.Enter(controller);
     }
 
-    public void UpdateState(UnitController controller, Actions actions)
+    public void UpdateState(T controller, Actions actions)
     {
-        State newState = _currentState.HandleTransitions(controller, actions);
+        State<T> newState = _currentState.HandleTransitions(controller, actions);
 
         if (newState != null)
         {
@@ -26,17 +26,17 @@ public class FiniteStateMachine
         Debug.Log(_currentState);
     }
 
-    public void LateUpdateState(UnitController controller)
+    public void LateUpdateState(T controller)
     {
         _currentState.LateUpdate(controller);
     }
 
-    public void FixedUpdateState(UnitController controller)
+    public void FixedUpdateState(T controller)
     {
         _currentState.FixedUpdate(controller);
     }
 
-    private void ChangeState(State state, UnitController controller)
+    private void ChangeState(State<T> state, T controller)
     {
         if (state != null && state != _currentState)
         {

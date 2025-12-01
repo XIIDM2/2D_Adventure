@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class IdleState : State
+public class IdleState : UnitState
 {
-    public override State HandleTransitions(UnitController controller, Actions actions)
+    public override State<UnitController> HandleTransitions(UnitController controller, Actions actions)
     {
         if (actions.MoveDirection != Vector2.zero) return controller.MoveState;
         else if (controller.IsGrounded && actions.JumpRequested) return controller.JumpState;

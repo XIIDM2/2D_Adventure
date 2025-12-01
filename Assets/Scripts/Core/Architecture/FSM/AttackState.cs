@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class AttackState : State
+public class AttackState : UnitState
 {
     private const string ATTACK_TAG = "Attack";
 
-    public override State HandleTransitions(UnitController controller, Actions actions)
+    public override State<UnitController> HandleTransitions(UnitController controller, Actions actions)
     {
         if (!controller.Animation.IsStatePlayingByTag(ATTACK_TAG)) return controller.NonAttackState;
 

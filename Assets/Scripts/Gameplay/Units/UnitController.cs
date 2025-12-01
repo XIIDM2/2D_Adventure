@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UnitController : MonoBehaviour, IMovementContext
+public class UnitController : MonoBehaviour, IControllable,  IMovementContext
 {
     public event UnityAction<bool> OnGroundStateChanged;
     [Header("Movement Info")]
@@ -45,10 +45,10 @@ public class UnitController : MonoBehaviour, IMovementContext
     public JumpState JumpState { get; private set; }
     public NonAttackState NonAttackState { get; private set; }
     public AttackState AttackState { get; private set; }
-    public FiniteStateMachine MovementFSM {  get; private set; }
-    public FiniteStateMachine AttackFSM {  get; private set; }
+    public FiniteStateMachine<UnitController> MovementFSM {  get; private set; }
+    public FiniteStateMachine<UnitController> AttackFSM {  get; private set; }
 
-    private List<FiniteStateMachine> _fsmachines = new List<FiniteStateMachine>();
+    private List<FiniteStateMachine<UnitController>> _fsmachines = new List<FiniteStateMachine<UnitController>>();
 
     private void Awake()
     {
@@ -71,10 +71,10 @@ public class UnitController : MonoBehaviour, IMovementContext
         NonAttackState = new NonAttackState();
         AttackState = new AttackState();
 
-        MovementFSM = new FiniteStateMachine();
+        MovementFSM = new FiniteStateMachine<UnitController>();
         MovementFSM.StateInit(IdleState, this);
 
-        AttackFSM = new FiniteStateMachine();
+        AttackFSM = new FiniteStateMachine<UnitController>();
         AttackFSM.StateInit(NonAttackState, this);
 
         _fsmachines.Add(MovementFSM);
@@ -99,7 +99,7 @@ public class UnitController : MonoBehaviour, IMovementContext
 
         Direction = currentActions.MoveDirection;
 
-        foreach (FiniteStateMachine fsm in _fsmachines)
+        foreach (var fsm in _fsmachines)
         {
             fsm.UpdateState(this, currentActions);
         }
@@ -107,7 +107,7 @@ public class UnitController : MonoBehaviour, IMovementContext
 
     private void LateUpdate()
     {
-        foreach (FiniteStateMachine fsm in _fsmachines)
+        foreach (var fsm in _fsmachines)
         {
             fsm.LateUpdateState(this);
         }
@@ -115,7 +115,7 @@ public class UnitController : MonoBehaviour, IMovementContext
 
     private void FixedUpdate()
     {
-        foreach (FiniteStateMachine fsm in _fsmachines)
+        foreach (var fsm in _fsmachines)
         {
             fsm.FixedUpdateState(this);
         }

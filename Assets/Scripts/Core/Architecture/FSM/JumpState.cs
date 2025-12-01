@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class JumpState : State
+public class JumpState : UnitState
 {
     private const float JUMP_THRESHOLD_TIME = 0.15f;
     private float _lastTimeJumped;
-    public override State HandleTransitions(UnitController controller, Actions actions)
+    public override State<UnitController> HandleTransitions(UnitController controller, Actions actions)
     {
         if (Time.time > _lastTimeJumped + JUMP_THRESHOLD_TIME && controller.IsGrounded)
         {
